@@ -19,14 +19,16 @@ class ProgressBar extends StatefulWidget {
   /// [value], if non-null, must be in the range of 0 to 100.
   ///
   /// [strokeWidth] must be equal or greater than 0
-  const ProgressBar({
-    Key? key,
-    this.value,
-    this.strokeWidth = 4.5,
-    this.semanticLabel,
-    this.backgroundColor,
-    this.foregroundColor,
-  })  : assert(value == null || value >= 0 && value <= 100),
+  const ProgressBar(
+      {Key? key,
+      this.value,
+      this.strokeWidth = 4.5,
+      this.semanticLabel,
+      this.backgroundColor,
+      this.foregroundColor,
+      this.animationDuration,
+      this.curve})
+      : assert(value == null || value >= 0 && value <= 100),
         assert(strokeWidth >= 0),
         super(key: key);
 
@@ -51,6 +53,14 @@ class ProgressBar extends StatefulWidget {
   /// The active color of the progress bar. If null,
   /// [ThemeData.colorScheme.primary] is used
   final Color? foregroundColor;
+
+  /// The duration of the animation from between states. Defaults to
+  /// [Duration(seconds: 1)]
+  final Duration? animationDuration;
+
+  /// The curve of the animation from between states. Defaults to
+  /// [Curves.fastOutSlowIn]
+  final Curve? curve;
 
   @override
   State<ProgressBar> createState() => _ProgressBarState();
@@ -114,6 +124,9 @@ class _ProgressBarState extends State<ProgressBar>
             if (deltaValue < 0) deltaValue++; // repeat
             return AnimatedProgress(
                 value: widget.value,
+                animationDuration:
+                    widget.animationDuration ?? const Duration(seconds: 1),
+                curve: widget.curve ?? Curves.fastOutSlowIn,
                 builder: (context, value) {
                   return CustomPaint(
                     painter: _ProgressBarPainter(

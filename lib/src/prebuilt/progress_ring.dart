@@ -28,6 +28,8 @@ class ProgressRing extends StatefulWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.backwards = false,
+    this.animationDuration,
+    this.curve,
   })  : assert(value == null || value >= 0 && value <= 100),
         super(key: key);
 
@@ -55,6 +57,14 @@ class ProgressRing extends StatefulWidget {
 
   /// Whether the indicator spins backwards or not. Defaults to false
   final bool backwards;
+
+  /// The duration of the animation from between states. Defaults to
+  /// [Duration(seconds: 1)]
+  final Duration? animationDuration;
+
+  /// The curve of the animation from between states. Defaults to
+  /// [Curves.fastOutSlowIn]
+  final Curve? curve;
 
   @override
   State<ProgressRing> createState() => _ProgressRingState();
@@ -144,6 +154,10 @@ class _ProgressRingState extends State<ProgressRing>
           animation: _controller,
           builder: (context, child) {
             return AnimatedProgress(
+              animationDuration:
+                  widget.animationDuration ?? const Duration(seconds: 1),
+              curve: widget.curve ?? Curves.fastOutSlowIn,
+              value: widget.value,
               builder: (context, value) {
                 return CustomPaint(
                   painter: _RingPainter(

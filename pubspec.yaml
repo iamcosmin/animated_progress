@@ -1,6 +1,6 @@
 name: animated_progress
 description: A way to smoothly animate progress indicators.
-version: 0.0.2
+version: 0.0.3
 homepage:
 
 environment:
